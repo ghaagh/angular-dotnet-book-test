@@ -1,0 +1,11 @@
+<div id="pager">
+    <ul fxLayout="row" fxLayoutAlign="start stretch" fxLayoutGap="8px">
+        <li><button mat-stroked-button class="prev" [disabled]="selected==1  || totalCount==0" (click)="goToPage(selected-1)"><mat-icon>keyboard_arrow_left</mat-icon><span>Prev</span></button></li>
+        <li *ngFor="let item of pager;let i = index" >
+           <span class="etc" *ngIf="i>=1 && pager.indexOf(item-1)==-1">...</span>
+        <button mat-stroked-button (click)="goToPage(item)" [class]="{'selected':selected==item}" >{{item}}</button>
+        
+        </li>
+        <li><button class="next" mat-stroked-button [disabled]="totalCount==0 || isLastPage()" (click)="goToPage(selected+1)"><span>Next</span><mat-icon>keyboard_arrow_right</mat-icon></button></li>
+    </ul>
+</div>

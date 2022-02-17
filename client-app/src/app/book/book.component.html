@@ -1,0 +1,62 @@
+<div class="search">
+  <div>
+    <button mat-stroked-button>
+    <mat-icon>add_circle_outline</mat-icon>
+      <span>Add New Book</span>
+    </button>
+
+  </div>
+  <div>
+    <input placeholder="Search" (keyup)="search($event)">
+    <button mat-icon-button><mat-icon>search</mat-icon></button>
+  </div>
+
+</div>
+<mat-table class="general-table"
+           #table [dataSource]="dataSource"
+           matSort
+           (matSortChange)="customSort($event)"
+           [@animateStagger]="{value:'50'}"
+           fusePerfectScrollbar>
+
+  <ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
+    <mat-cell *matCellDef="let item">
+      <p>{{item.id}}</p>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="bookTitle">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Title</mat-header-cell>
+    <mat-cell *matCellDef="let item">
+      <p>{{item.title}}</p>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="isbn">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>ISBN</mat-header-cell>
+    <mat-cell *matCellDef="let item">
+      <p>{{item.isbn}}</p>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <mat-header-cell *matHeaderCellDef class="cell-align-right">
+      Action
+    </mat-header-cell>
+    <mat-cell *matCellDef="let item" class="cell-align-right">
+      <div style="display:flex">
+        <button mat-icon-button color="primary"><mat-icon>edit</mat-icon></button>
+        <button mat-icon-button color="warn" ><mat-icon>delete</mat-icon></button>
+
+      </div>
+    </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></mat-header-row>
+
+  <mat-row *matRowDef="let bankers; columns: displayedColumns;"
+           class="general">
+  </mat-row>
+
+</mat-table>
+<pager [totalCount]="totalCount" [selected]="filterDetails.currentPage" (onPageChanged)="onPageChanged($event)" [pageSize]="filterDetails.pageSize"></pager>

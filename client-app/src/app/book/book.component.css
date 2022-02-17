@@ -1,0 +1,16 @@
+.search {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+  align-content: stretch;
+  background-color: #673ab7;
+  color: white;
+  padding: 10px;
+}
+  .search input {
+    height: 33px;
+    outline: none;
+    padding:0px 10px;
+  }
