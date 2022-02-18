@@ -15,6 +15,7 @@ namespace Book.Application.Infrastructure.Sql
             services.AddScoped<IQueryHelper<Domain.Book>, QueryHelper<Domain.Book>>();
             services.AddScoped<IBookRepository, Repository.SqlBookRepository>();
             services.AddScoped<ISaver, Repository.SqlSaver>();
+            services.AddScoped<IAuthorRepository, Repository.SqlAuthorRepository>();
 
             return services;
         }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Book.Application.Controllers.Dto;
+using Book.Application.Domain;
 using Book.Application.Domain.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,12 +23,26 @@ namespace Book.Application.Controllers
         [HttpPost]
         public async Task<IActionResult> POST(CreateAuthorRequest request)
         {
-            var author = new Domain.Author(request.Name);
+            var author = new Author(request.Name);
 
             await _authorRepository.AddAsync(author);
             await _saver.SaveAsync();
 
             return Ok(_mapper.Map<AuthorResponse>(author));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GET([FromQuery] SearchBookRequest request)
+        {
+            var filter = _mapper.Map<Filter>(request);
+
+            var bookPagedData = await _authorRepository.GetAsync(filter);
+
+            return Ok(new Paged<AuthorResponse>(
+                bookPagedData.Records.Select(c => _mapper.Map<AuthorResponse>(c)),
+                bookPagedData.TotalSize,
+                bookPagedData.CurrentPage,
+                bookPagedData.PageSize));
         }
     }
 }

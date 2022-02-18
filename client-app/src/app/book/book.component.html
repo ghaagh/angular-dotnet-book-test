@@ -1,10 +1,9 @@
 <div class="search">
   <div>
-    <button mat-stroked-button>
-    <mat-icon>add_circle_outline</mat-icon>
+    <button mat-stroked-button (click)="openCreateDialog()">
+      <mat-icon>add_circle_outline</mat-icon>
       <span>Add New Book</span>
     </button>
-
   </div>
   <div>
     <input placeholder="Search" (keyup)="search($event)">

@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { BookService } from './book.service'
 import { BookSearchInput } from './model/book-search-input';
-import { BookResponse, PagedBookResponse } from './model/paged-book-response';
+import { BookResponse } from './model/paged-book-response';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { map, startWith, take, takeUntil } from 'rxjs/operators';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 @Component({
   selector: 'app-book',
   templateUrl: './book.component.html',
@@ -11,11 +15,15 @@ import { BookResponse, PagedBookResponse } from './model/paged-book-response';
 })
 export class BookComponent implements OnInit {
 
-  constructor(bookService: BookService) {
+  constructor(
+    bookService: BookService,
+    public dialog: MatDialog
+  ) {
     this._bookService = bookService;
     this.filterDetails = <BookSearchInput>{ currentPage: 1, orderby: null, pageSize: 10, searchFields: 'isbn,bookTitle,id', searchValue: '' }
   }
-  private _bookService: BookService;
+  isbn:string
+  private _bookService: BookService
   displayedColumns = [
     'id',
     'bookTitle',
@@ -33,8 +41,6 @@ export class BookComponent implements OnInit {
   }
 
   search($event: any) {
-    console.log($event)
-    console.log($event.target)
     this.filterDetails.currentPage = 1;
     this.filterDetails.searchValue = $event.target.value
     this.reloadTable();
@@ -42,6 +48,7 @@ export class BookComponent implements OnInit {
 
   ngOnInit(): void {
     this.reloadTable();
+
   }
   onPageChanged(event) {
     this.filterDetails.currentPage = event.Selected;
@@ -49,12 +56,82 @@ export class BookComponent implements OnInit {
 
   }
 
-  reloadTable(): void{
+  reloadTable(): void {
     this._bookService.get(this.filterDetails).subscribe((response) => {
       this.dataSource.data = response.records
       this.totalCount = response.totalSize;
     });
   }
 
+  openCreateDialog(): void {
+    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+      width: '400px'
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+
+}
+@Component({
+  selector: 'create-new-book-dialog',
+  templateUrl: './create-new-book-dialog.html',
+})
+export class DialogOverviewExampleDialog implements OnInit, OnDestroy {
+  public createBookForm: FormGroup
+  public authorSearchInput: FormControl = new FormControl();
+  public authorsList: any[] = []
+
+  protected _onDestroy = new Subject();
+
+  constructor(
+    private _formBuilder: FormBuilder,
+    public dialogRef: MatDialogRef<DialogOverviewExampleDialog>, @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+
+
+  }
+  ngOnDestroy(): void {
+    this._onDestroy.next();
+    this._onDestroy.complete();
+  }
+
+
+  getFormValidationErrors() {
+    Object.keys(this.createBookForm.controls).forEach(key => {
+      const controlErrors: ValidationErrors = this.createBookForm.get(key).errors;
+      if (controlErrors != null) {
+        Object.keys(controlErrors).forEach(keyError => {
+          console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
+        });
+      }
+    });
+  }
+  ngOnInit(): void {
+    this.createBookForm = this._formBuilder.group({
+      isbn: new FormControl('', [Validators.maxLength(15), Validators.required]),
+      title: new FormControl('', [Validators.maxLength(50), Validators.required]),
+      publishedAt: new FormControl('', [Validators.required]),
+      authors: new FormControl('', [Validators.required])
+    });
+    this.filteredOptions = this.authorSearchInput.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value)),
+    );
+  
+  }
+  onSubmit = () => {
+   
+  }
+  options: string[] = ['One', 'Two', 'Three'];
+  filteredOptions: Observable<string[]>;
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }
