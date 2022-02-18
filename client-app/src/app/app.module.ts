@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BidiModule } from '@angular/cdk/bidi';
 
 import { AppComponent } from './app.component';
-import { BookComponent, DialogOverviewExampleDialog } from './book/book.component';
+import { BookComponent, CreateBookDialog } from './book/book.component';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { HttpClientModule } from '@angular/common/http';
@@ -17,13 +17,18 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import { MatNativeDateModule } from '@angular/material/core';
-import { MatAutocompleteModule } from '@angular/material/autocomplete'
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { AuthorComponent, CreateAuthorDialog } from './author/author.component';
+import { AppRoutingModule } from './app-routing.module';
+
 @NgModule({
   declarations: [
     AppComponent,
     BookComponent,
     PagerComponent,
-    DialogOverviewExampleDialog
+    CreateBookDialog,
+    CreateAuthorDialog,
+    AuthorComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +45,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete'
     MatAutocompleteModule,
     MatFormFieldModule,
     MatIconModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -2,11 +2,11 @@
   <div>
     <button mat-stroked-button (click)="openCreateDialog()">
       <mat-icon>add_circle_outline</mat-icon>
-      <span>Add New Book</span>
+      <span>Add New Author</span>
     </button>
   </div>
   <div>
-    <input placeholder="Search" (keyup)="search($event)">
+    <input placeholder="Search in Authors" (keyup)="search($event)">
     <button mat-icon-button><mat-icon>search</mat-icon></button>
   </div>
 
@@ -25,17 +25,10 @@
     </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="bookTitle">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>Title</mat-header-cell>
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
     <mat-cell *matCellDef="let item">
-      <p>{{item.title}}</p>
-    </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="isbn">
-    <mat-header-cell *matHeaderCellDef mat-sort-header>ISBN</mat-header-cell>
-    <mat-cell *matCellDef="let item">
-      <p>{{item.isbn}}</p>
+      <p>{{item.name}}</p>
     </mat-cell>
   </ng-container>
 
@@ -45,8 +38,7 @@
     </mat-header-cell>
     <mat-cell *matCellDef="let item" class="cell-align-right">
       <div style="display:flex">
-        <button mat-icon-button color="primary"><mat-icon>edit</mat-icon></button>
-        <button mat-icon-button color="warn"  (click)="delete(item.id)"><mat-icon>delete</mat-icon></button>
+        <button mat-icon-button color="warn" (click)="delete(item.id)"><mat-icon>delete</mat-icon></button>
 
       </div>
     </mat-cell>

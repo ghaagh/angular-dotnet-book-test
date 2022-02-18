@@ -30,7 +30,7 @@ namespace Book.Application.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GET([FromQuery] SearchBookRequest request)
+        public async Task<IActionResult> GET([FromQuery] SearchRequest request)
         {
             var filter = _mapper.Map<Filter>(request);
 
@@ -52,6 +52,17 @@ namespace Book.Application.Controllers
             await _saver.SaveAsync();
 
             return Ok(_mapper.Map<BookResponse>(book));
+        }
+
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DELETE(int id)
+        {
+
+            await _bookRepo.DeleteAsync(id);
+            await _saver.SaveAsync();
+
+            return Ok();
         }
     }
 }

@@ -22,6 +22,11 @@ export class BookService {
     return this._httpService.get<PagedBookResponse>(queryUrl, httpOptions);
   }
 
+  public delete(id: number): Observable<any> {
+
+    return this._httpService.delete(`${this.bookUrl}/${id}`, httpOptions)
+  }
+
   createQueryString(params): string {
     let esc = encodeURIComponent;
     let queryParams = Object.keys(params)

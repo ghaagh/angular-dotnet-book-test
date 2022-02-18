@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>Create New Author</h1>
+<form name="createAuthorForm" [formGroup]="createAuthorForm" (ngSubmit)="onSubmit()">
+
+  <div mat-dialog-content>
+
+
+    <mat-form-field appearance="outline">
+      <mat-label>Author Name</mat-label>
+      <input matInput formControlName="name">
+      <mat-error>
+        <span *ngIf="createAuthorForm.get('name').hasError('required')">Author name is mandatory</span>
+        <span *ngIf="createAuthorForm.get('name').hasError('maxlength')">Max Length is reached</span>
+      </mat-error>
+    </mat-form-field>
+
+
+  </div>
+  <div mat-dialog-actions>
+    <button mat-flat-button color="primary" cdkFocusInitial type="submit">Create Author</button>
+    <button mat-flat-button color="warn" (click)="onNoClick()">Cancel</button>
+  </div>
+</form>

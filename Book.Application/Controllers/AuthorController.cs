@@ -2,7 +2,6 @@
 using Book.Application.Controllers.Dto;
 using Book.Application.Domain;
 using Book.Application.Domain.Repository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Book.Application.Controllers
@@ -14,12 +13,14 @@ namespace Book.Application.Controllers
         private readonly IAuthorRepository _authorRepository;
         private readonly ISaver _saver;
         private readonly IMapper _mapper;
+
         public AuthorController(IAuthorRepository authorRepository, ISaver saver, IMapper mapper)
         {
             _mapper = mapper;
             _saver = saver;
             _authorRepository = authorRepository;
         }
+
         [HttpPost]
         public async Task<IActionResult> POST(CreateAuthorRequest request)
         {
@@ -31,8 +32,18 @@ namespace Book.Application.Controllers
             return Ok(_mapper.Map<AuthorResponse>(author));
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DELETE(int id)
+        {
+
+            await _authorRepository.DeleteAsync(id);
+            await _saver.SaveAsync();
+
+            return Ok();
+        }
+
         [HttpGet]
-        public async Task<IActionResult> GET([FromQuery] SearchBookRequest request)
+        public async Task<IActionResult> GET([FromQuery] SearchRequest request)
         {
             var filter = _mapper.Map<Filter>(request);
 

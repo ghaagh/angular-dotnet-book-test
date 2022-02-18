@@ -10,9 +10,10 @@ namespace Book.Application.Infrastructure.Sql.Repository
     {
         private readonly Context _context;
         private readonly IQueryHelper<Author> _queryHelper;
-        public SqlAuthorRepository(Context context)
+        public SqlAuthorRepository(Context context, IQueryHelper<Author> queryHelper)
         {
             _context = context;
+            _queryHelper = queryHelper;
         }
         public async Task<Author> AddAsync(Author author)
         {
@@ -29,7 +30,7 @@ namespace Book.Application.Infrastructure.Sql.Repository
         public async Task<Paged<Author>> GetAsync(Filter filter)
         {
 
-            var query = _context.Authors.AsQueryable();
+            var query = _context.Authors.Where(c=>!c.IsDeleted).AsQueryable();
 
             query = _queryHelper.ApplySearch(query, filter.SearchValue, filter.SearchFields);
 

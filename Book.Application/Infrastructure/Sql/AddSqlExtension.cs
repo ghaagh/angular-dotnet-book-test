@@ -13,6 +13,7 @@ namespace Book.Application.Infrastructure.Sql
                 options.UseSqlServer(connectionString);
             });
             services.AddScoped<IQueryHelper<Domain.Book>, QueryHelper<Domain.Book>>();
+            services.AddScoped<IQueryHelper<Domain.Author>, QueryHelper<Domain.Author>>();
             services.AddScoped<IBookRepository, Repository.SqlBookRepository>();
             services.AddScoped<ISaver, Repository.SqlSaver>();
             services.AddScoped<IAuthorRepository, Repository.SqlAuthorRepository>();

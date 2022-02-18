@@ -2,7 +2,7 @@
 
 namespace Book.Application.Controllers.Dto
 {
-    public class SearchBookRequest
+    public class SearchRequest
     {
         public string? OrderBy { get; set; }
         public string? SearchValue { get; set; }

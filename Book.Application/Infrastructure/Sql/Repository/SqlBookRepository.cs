@@ -33,7 +33,7 @@ namespace Book.Application.Infrastructure.Sql.Repository
 
         public async Task<Paged<Domain.Book>> GetAsync(Filter filter)
         {
-            var query = _db.Books.AsQueryable();
+            var query = _db.Books.Where(c=>!c.IsDeleted).AsQueryable();
 
             query = _queryHelper.ApplySearch(query, filter.SearchValue, filter.SearchFields);
 

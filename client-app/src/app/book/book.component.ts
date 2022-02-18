@@ -6,24 +6,22 @@ import { BookSearchInput } from './model/book-search-input';
 import { BookResponse } from './model/paged-book-response';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { map, startWith, take, takeUntil } from 'rxjs/operators';
-import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+
 @Component({
   selector: 'app-book',
   templateUrl: './book.component.html',
-  styleUrls: ['./book.component.css']
-})
+ })
 export class BookComponent implements OnInit {
 
   constructor(
-    bookService: BookService,
+    public bookService: BookService,
     public dialog: MatDialog
   ) {
-    this._bookService = bookService;
     this.filterDetails = <BookSearchInput>{ currentPage: 1, orderby: null, pageSize: 10, searchFields: 'isbn,bookTitle,id', searchValue: '' }
   }
   isbn:string
-  private _bookService: BookService
   displayedColumns = [
     'id',
     'bookTitle',
@@ -46,10 +44,17 @@ export class BookComponent implements OnInit {
     this.reloadTable();
   }
 
+  delete(id: number) {
+    this.bookService.delete(id).subscribe(() => {
+      this.reloadTable();
+    });
+  }
+
   ngOnInit(): void {
     this.reloadTable();
 
   }
+
   onPageChanged(event) {
     this.filterDetails.currentPage = event.Selected;
     this.reloadTable();
@@ -57,14 +62,14 @@ export class BookComponent implements OnInit {
   }
 
   reloadTable(): void {
-    this._bookService.get(this.filterDetails).subscribe((response) => {
+    this.bookService.get(this.filterDetails).subscribe((response) => {
       this.dataSource.data = response.records
       this.totalCount = response.totalSize;
     });
   }
 
   openCreateDialog(): void {
-    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+    const dialogRef = this.dialog.open(CreateBookDialog, {
       width: '400px'
     });
 
@@ -77,7 +82,7 @@ export class BookComponent implements OnInit {
   selector: 'create-new-book-dialog',
   templateUrl: './create-new-book-dialog.html',
 })
-export class DialogOverviewExampleDialog implements OnInit, OnDestroy {
+export class CreateBookDialog implements OnInit, OnDestroy {
   public createBookForm: FormGroup
   public authorSearchInput: FormControl = new FormControl();
   public authorsList: any[] = []
@@ -86,16 +91,13 @@ export class DialogOverviewExampleDialog implements OnInit, OnDestroy {
 
   constructor(
     private _formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<DialogOverviewExampleDialog>, @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
+    public dialogRef: MatDialogRef<CreateBookDialog>, @Inject(MAT_DIALOG_DATA) public data: any
+  ) { }
 
-
-  }
   ngOnDestroy(): void {
     this._onDestroy.next();
     this._onDestroy.complete();
   }
-
 
   getFormValidationErrors() {
     Object.keys(this.createBookForm.controls).forEach(key => {
@@ -107,6 +109,7 @@ export class DialogOverviewExampleDialog implements OnInit, OnDestroy {
       }
     });
   }
+
   ngOnInit(): void {
     this.createBookForm = this._formBuilder.group({
       isbn: new FormControl('', [Validators.maxLength(15), Validators.required]),
@@ -120,11 +123,15 @@ export class DialogOverviewExampleDialog implements OnInit, OnDestroy {
     );
   
   }
+
   onSubmit = () => {
    
   }
+
   options: string[] = ['One', 'Two', 'Three'];
+
   filteredOptions: Observable<string[]>;
+
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
