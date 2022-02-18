@@ -22,7 +22,7 @@ export class AuthorComponent implements OnInit {
   ) {
     this.filterDetails = <AuthorSearchInput>{ currentPage: 1, orderby: null, pageSize: 10, searchFields: 'name,id', searchValue: '' }
   }
-  isbn: string
+  public searchField: string
   displayedColumns = [
     'id',
     'name',

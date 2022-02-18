@@ -1,13 +1,17 @@
-<div class="search">
+<div class="top">
   <div>
-    <button mat-stroked-button (click)="openCreateDialog()">
+    <button mat-stroked-button color="primary" (click)="openCreateDialog()">
       <mat-icon>add_circle_outline</mat-icon>
       <span>Add New Author</span>
     </button>
   </div>
   <div>
-    <input placeholder="Search in Authors" (keyup)="search($event)">
-    <button mat-icon-button><mat-icon>search</mat-icon></button>
+    <mat-form-field appearance="outline">
+      <mat-label>Search</mat-label>
+      <input placeholder="Search" matInput [(ngModel)]="searchField" (keyup)="search($event)">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
   </div>
 
 </div>

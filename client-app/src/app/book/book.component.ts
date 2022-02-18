@@ -21,7 +21,8 @@ export class BookComponent implements OnInit {
   ) {
     this.filterDetails = <BookSearchInput>{ currentPage: 1, orderby: null, pageSize: 10, searchFields: 'isbn,bookTitle,id', searchValue: '' }
   }
-  isbn:string
+
+  public searchField: string
   displayedColumns = [
     'id',
     'bookTitle',

@@ -1,0 +1,27 @@
+.menu {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  align-content: stretch;
+  background-color: #673ab7;
+  color: white;
+  padding: 15px 10px;
+  a{
+       padding-right:10px;
+       color:white !important;
+       text-decoration:none !important;
+       
+   }
+}
+
+::ng-deep .top {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  place-content:space-between;
+  align-items: stretch;
+  align-content: stretch;
+  padding: 10px;
+
+}
