@@ -25,3 +25,6 @@
   padding: 10px;
 
 }
+::ng-deep mat-table {
+  margin-top: -33px;
+}

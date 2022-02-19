@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { BookSearchInput } from './model/book-search-input';
-import { PagedBookResponse } from './model/paged-book-response';
+import { BookResponse, PagedBookResponse } from './model/paged-book-response';
+import { CreateBookRequest } from './model/create-book-request';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -17,9 +18,14 @@ export class BookService {
   }
 
   public get(input: BookSearchInput): Observable<PagedBookResponse> {
-    let paramString = this.createQueryString(input);
+    let paramString = this._createQueryString(input);
     let queryUrl = this.bookUrl + "?" + paramString;
     return this._httpService.get<PagedBookResponse>(queryUrl, httpOptions);
+  }
+
+  public getById(input: number): Observable<BookResponse> {
+    let queryUrl = this.bookUrl + "/" + input;
+    return this._httpService.get<BookResponse>(queryUrl, httpOptions);
   }
 
   public delete(id: number): Observable<any> {
@@ -27,7 +33,15 @@ export class BookService {
     return this._httpService.delete(`${this.bookUrl}/${id}`, httpOptions)
   }
 
-  createQueryString(params): string {
+  public create(request: CreateBookRequest): Observable<PagedBookResponse> {
+    return this._httpService.post<PagedBookResponse>(this.bookUrl, request, httpOptions)
+  }
+
+  public edit(id: number, request: CreateBookRequest): Observable<PagedBookResponse> {
+    return this._httpService.put<PagedBookResponse>(`${this.bookUrl}/${id}`, request, httpOptions)
+  }
+
+  private _createQueryString(params): string {
     let esc = encodeURIComponent;
     let queryParams = Object.keys(params)
       .map(k => esc(k) + '=' + esc(params[k]))

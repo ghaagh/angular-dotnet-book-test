@@ -47,6 +47,11 @@ namespace Book.Application.Infrastructure.Sql
                 .HasKey(c => new { c.BookId, c.AuthorId });
 
         }
+        public async override Task<int> SaveChangesAsync(CancellationToken token= default)
+        {
+
+            return await base.SaveChangesAsync(token);
+        }
         public virtual DbSet<Domain.Book> Books { get; set; }
         public virtual DbSet<Domain.Author> Authors { get; set; }
     }

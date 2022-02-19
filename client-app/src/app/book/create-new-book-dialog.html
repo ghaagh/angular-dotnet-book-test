@@ -1,6 +1,8 @@
-<h1 mat-dialog-title>Create New Book</h1>
-<div mat-dialog-content>
-  <form name="createBookForm" [formGroup]="createBookForm" (ngSubmit)="onSubmit()">
+<h1 mat-dialog-title *ngIf="!editMode">Create New Book</h1>
+<h1 mat-dialog-title *ngIf="editMode">Modify Book: {{data.title}}</h1>
+<form name="createBookForm" [formGroup]="createBookForm" (ngSubmit)="onSubmit()">
+
+  <div mat-dialog-content>
 
 
     <mat-form-field appearance="outline">
@@ -31,24 +33,63 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field class="example-full-width" appearance="fill">
+    <mat-form-field class="example-full-width" appearance="outline">
       <mat-label>Authors</mat-label>
       <input type="text"
              placeholder="Pick one"
              aria-label="Number"
              matInput
              [formControl]="authorSearchInput"
+             (keyup)="searchOnAuthors($event)"
              [matAutocomplete]="auto">
       <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-          {{option}}
+        <mat-option *ngFor="let option of filteredOptions" (click)="addToAuthor(option.id,option.name)" [value]="option.id">
+          {{option.name}}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-  </form>
 
-</div>
-<div mat-dialog-actions>
-  <button mat-flat-button color="primary" cdkFocusInitial type="submit">Create Book</button>
-  <button mat-flat-button color="warn" (click)="onNoClick()">Cancel</button>
-</div>
+
+    <h3>Added Authors</h3>
+    <hr />
+    <mat-table class="general-table"
+               #table [dataSource]="authorsDataSource" style="width:100%"
+               matSort
+               [@animateStagger]="{value:'50'}"
+               fusePerfectScrollbar>
+
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+        <mat-cell *matCellDef="let item">
+          <p>{{item.name}}</p>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <mat-header-cell *matHeaderCellDef class="cell-align-right">
+          Action
+        </mat-header-cell>
+        <mat-cell *matCellDef="let item" class="cell-align-right">
+          <div style="display:flex">
+            <button mat-icon-button color="warn" (click)="deleteAuthor(item.id)"><mat-icon>delete</mat-icon></button>
+
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></mat-header-row>
+
+      <mat-row *matRowDef="let bankers; columns: displayedColumns;"
+               class="general">
+      </mat-row>
+
+    </mat-table>
+    <span class="mat-error" *ngIf="authorsList.length==0">No author added</span>
+
+
+  </div>
+  <div mat-dialog-actions>
+    <button mat-flat-button color="primary" cdkFocusInitial type="submit"><span *ngIf="editMode">Save Changes</span><span *ngIf="!editMode">Create Book</span></button>
+    <button mat-flat-button color="warn" (click)="onNoClick()">Cancel</button>
+  </div>
+</form>

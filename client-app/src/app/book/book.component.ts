@@ -1,145 +1,190 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { BookService } from './book.service'
 import { BookSearchInput } from './model/book-search-input';
-import { BookResponse } from './model/paged-book-response';
+import { AuthorResponse, BookResponse } from './model/paged-book-response';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { map, startWith } from 'rxjs/operators';
-import { Observable, Subject } from 'rxjs';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthorService } from '../author/author.service';
+import { CreateBookRequest } from './model/create-book-request';
 
 @Component({
   selector: 'app-book',
   templateUrl: './book.component.html',
- })
+})
 export class BookComponent implements OnInit {
+  public searchField: string
+  public displayedColumns = [
+    'id',
+    'bookTitle',
+    'isbn',
+    'authors',
+    'actions'
+  ];
+  public filterDetails: BookSearchInput = <BookSearchInput>{
+    currentPage: 1,
+    orderby: null,
+    pageSize: 10,
+    searchFields: 'isbn,bookTitle,id',
+    searchValue: ''
+  }
+  public totalCount: number;
+  public dataSource = new MatTableDataSource<BookResponse>();
 
   constructor(
     public bookService: BookService,
     public dialog: MatDialog
-  ) {
-    this.filterDetails = <BookSearchInput>{ currentPage: 1, orderby: null, pageSize: 10, searchFields: 'isbn,bookTitle,id', searchValue: '' }
-  }
+  ) { }
 
-  public searchField: string
-  displayedColumns = [
-    'id',
-    'bookTitle',
-    'isbn',
-    'actions'
-  ];
-  public totalCount: number;
-  public dataSource = new MatTableDataSource<BookResponse>();
-  public filterDetails: BookSearchInput;
 
   public customSort = (event: Sort) => {
     this.filterDetails.currentPage = 1;
     this.filterDetails.orderby = `${event.active} ${event.direction}`;
-    this.reloadTable();
+    this._reloadTable();
   }
 
-  search($event: any) {
+  public search($event: any) {
     this.filterDetails.currentPage = 1;
     this.filterDetails.searchValue = $event.target.value
-    this.reloadTable();
+    this._reloadTable();
   }
 
-  delete(id: number) {
+  public delete(id: number) {
     this.bookService.delete(id).subscribe(() => {
-      this.reloadTable();
+      this._reloadTable();
     });
   }
 
-  ngOnInit(): void {
-    this.reloadTable();
+  public ngOnInit(): void {
+    this._reloadTable();
 
   }
 
-  onPageChanged(event) {
+  public onPageChanged(event) {
     this.filterDetails.currentPage = event.Selected;
-    this.reloadTable();
+    this._reloadTable();
 
   }
 
-  reloadTable(): void {
+  public openCreateDialog(): void {
+    const dialogRef = this.dialog.open(CreateBookDialog, {
+      width: '400px'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+    });
+  }
+  public openEditDialog(id: number): void {
+    this.bookService.getById(id).subscribe((response) => {
+      const dialogRef = this.dialog.open(CreateBookDialog, {
+        width: '400px',
+        data: response
+
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result.saved)
+          this._reloadTable();
+      });
+    });
+
+  }
+
+  private _reloadTable(): void {
     this.bookService.get(this.filterDetails).subscribe((response) => {
       this.dataSource.data = response.records
       this.totalCount = response.totalSize;
     });
   }
-
-  openCreateDialog(): void {
-    const dialogRef = this.dialog.open(CreateBookDialog, {
-      width: '400px'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-    });
-  }
-
 }
+
+
 @Component({
   selector: 'create-new-book-dialog',
   templateUrl: './create-new-book-dialog.html',
 })
-export class CreateBookDialog implements OnInit, OnDestroy {
+export class CreateBookDialog implements OnInit {
   public createBookForm: FormGroup
   public authorSearchInput: FormControl = new FormControl();
-  public authorsList: any[] = []
-
-  protected _onDestroy = new Subject();
-
+  public authorsList: AuthorResponse[] = []
+  public authorsDataSource: MatTableDataSource<AuthorResponse> = new MatTableDataSource<AuthorResponse>(this.authorsList)
+  public filteredOptions: AuthorResponse[]
+  public displayedColumns = ['name', 'action'];
+  public get editMode(): boolean {
+    return this.data != null;
+  };
   constructor(
+    public authorService: AuthorService,
+    public bookService: BookService,
     private _formBuilder: FormBuilder,
-    public dialogRef: MatDialogRef<CreateBookDialog>, @Inject(MAT_DIALOG_DATA) public data: any
-  ) { }
+    public dialogRef: MatDialogRef<CreateBookDialog>, @Inject(MAT_DIALOG_DATA) public data: BookResponse
+  ) {}
 
-  ngOnDestroy(): void {
-    this._onDestroy.next();
-    this._onDestroy.complete();
-  }
-
-  getFormValidationErrors() {
-    Object.keys(this.createBookForm.controls).forEach(key => {
-      const controlErrors: ValidationErrors = this.createBookForm.get(key).errors;
-      if (controlErrors != null) {
-        Object.keys(controlErrors).forEach(keyError => {
-          console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
-        });
-      }
-    });
-  }
-
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.createBookForm = this._formBuilder.group({
       isbn: new FormControl('', [Validators.maxLength(15), Validators.required]),
       title: new FormControl('', [Validators.maxLength(50), Validators.required]),
-      publishedAt: new FormControl('', [Validators.required]),
-      authors: new FormControl('', [Validators.required])
+      publishedAt: new FormControl('', [Validators.required])
     });
-    this.filteredOptions = this.authorSearchInput.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value)),
-    );
-  
+    if (this.editMode) {
+      this.createBookForm.patchValue({
+        isbn: this.data.isbn,
+        title: this.data.title,
+        publishedAt: this.data.publishedAt
+      });
+      this.authorsList = this.data.authors;
+      this.authorsDataSource.data = this.authorsList;
+    }
   }
 
-  onSubmit = () => {
+  public searchOnAuthors($event) {
+    if ($event.target.value.length < 2)
+      return;
+    this._filter($event.target.value);
+  }
+
+  public addToAuthor(id: number, name: string) {
+    this.authorSearchInput.setValue('');
+    this.authorsList.push({ id: id, name: name });
+    this.authorsDataSource.data = this.authorsList;
+  }
+
+  public deleteAuthor(id: number) {
    
+    this.authorsList = this.authorsList.filter(item =>  item.id != id );
+    this.authorsDataSource.data = this.authorsList;
   }
 
-  options: string[] = ['One', 'Two', 'Three'];
+  public onSubmit = () => {
+    let model = <CreateBookRequest>{
+      authorIds: this.authorsList.map(item => item.id),
+      iSBN: this.createBookForm.controls['isbn'].value,
+      publishedAt: this.createBookForm.controls['publishedAt'].value,
+      title: this.createBookForm.controls['title'].value
+    }
+    if (!this.editMode) {
+      this.bookService.create(model).subscribe(response => {
+        this.dialogRef.close({ 'saved': true });
+      }, (error) => { this.onNoClick() });
+    }
+    else {
+      this.bookService.edit(this.data.id,model).subscribe(response => {
+        this.dialogRef.close({ 'saved': true });
+      }, (error) => { this.onNoClick() });
+    }
+  }
 
-  filteredOptions: Observable<string[]>;
-
-  private _filter(value: string): string[] {
+  private _filter(value: string): void {
     const filterValue = value.toLowerCase();
+    if (filterValue.length < 3) {
+      this.filteredOptions = [];
+      return;
+    }
+    const authorSearchInput = <BookSearchInput>{ currentPage: 1, orderby: null, pageSize: 4, searchFields: 'name,id', searchValue: filterValue }
+    this.authorService.get(authorSearchInput).subscribe(c => { this.filteredOptions = c.records });
 
-    return this.options.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   onNoClick(): void {
-    this.dialogRef.close();
+    this.dialogRef.close({'saved':false});
   }
 }

@@ -23,7 +23,7 @@ namespace Book.Application.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> GET(int id)
         {
             var book = await _bookRepo.GetByIdAsync(id);
             return Ok(_mapper.Map<BookResponse>(book));
@@ -37,9 +37,9 @@ namespace Book.Application.Controllers
             var bookPagedData = await _bookRepo.GetAsync(filter);
 
             return Ok(new Paged<BookResponse>(
-                bookPagedData.Records.Select(c=> _mapper.Map<BookResponse>(c)), 
-                bookPagedData.TotalSize, 
-                bookPagedData.CurrentPage, 
+                bookPagedData.Records.Select(c => _mapper.Map<BookResponse>(c)),
+                bookPagedData.TotalSize,
+                bookPagedData.CurrentPage,
                 bookPagedData.PageSize));
         }
 
@@ -52,6 +52,17 @@ namespace Book.Application.Controllers
             await _saver.SaveAsync();
 
             return Ok(_mapper.Map<BookResponse>(book));
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PUT(int id, CreateBookRequest request)
+        {
+            var book = _mapper.Map<Domain.Book>(request);
+
+            await _bookRepo.UpdateAsync(id, book);
+            await _saver.SaveAsync();
+
+            return Ok(_mapper.Map<BookResponse>(await _bookRepo.GetByIdAsync(id)));
         }
 
 

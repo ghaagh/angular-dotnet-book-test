@@ -1,7 +1,7 @@
 ﻿namespace Book.Application.Domain.Repository
 {
-    public interface IBookHistory
+    public interface IHistory<T> where T : IAggregateRoot
     {
-        Task<IList<History>> GetAsync();
+        Task<IList<History>> GetAsync(int id);
     }
 }

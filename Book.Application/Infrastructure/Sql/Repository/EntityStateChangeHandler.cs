@@ -8,6 +8,7 @@ namespace Book.Application.Infrastructure.Sql.Repository
         {
             if (e.Entry.GetType() != typeof(Book.Application.Domain.Book))
                 return;
+            Console.WriteLine(e);
         }
     }
 }

@@ -43,14 +43,24 @@
     </mat-cell>
   </ng-container>
 
+  <ng-container matColumnDef="authors">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Authors</mat-header-cell>
+    <mat-cell *matCellDef="let item">
+      <ng-container *ngFor="let author of item.authors">
+
+        <span style="background-color:rgb(245,245,245);border-radius:3px;padding:3px;font-size:11px;margin-right:3px">{{author.name}}</span>
+      </ng-container>
+    </mat-cell>
+  </ng-container>
+
   <ng-container matColumnDef="actions">
     <mat-header-cell *matHeaderCellDef class="cell-align-right">
       Action
     </mat-header-cell>
     <mat-cell *matCellDef="let item" class="cell-align-right">
       <div style="display:flex">
-        <button mat-icon-button color="primary"><mat-icon>edit</mat-icon></button>
-        <button mat-icon-button color="warn"  (click)="delete(item.id)"><mat-icon>delete</mat-icon></button>
+        <button mat-icon-button color="primary" (click)="openEditDialog(item.id)"><mat-icon>edit</mat-icon></button>
+        <button mat-icon-button color="warn" (click)="delete(item.id)"><mat-icon>delete</mat-icon></button>
 
       </div>
     </mat-cell>

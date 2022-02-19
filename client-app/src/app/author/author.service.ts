@@ -21,7 +21,7 @@ export class AuthorService {
   }
 
   public get(input: AuthorSearchInput): Observable<PagedAuthorResponse> {
-    let paramString = this.createQueryString(input)
+    let paramString = this._createQueryString(input)
     let queryUrl = this.authorUrl + "?" + paramString
     return this._httpService.get<PagedAuthorResponse>(queryUrl, httpOptions)
   }
@@ -36,7 +36,7 @@ export class AuthorService {
     return this._httpService.delete(`${this.authorUrl}/${id}`, httpOptions)
   }
 
-  createQueryString(params): string {
+  private _createQueryString(params): string {
     let esc = encodeURIComponent;
     let queryParams = Object.keys(params)
       .map(k => esc(k) + '=' + esc(params[k]))
