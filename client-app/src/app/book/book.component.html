@@ -6,9 +6,9 @@
     </button>
   </div>
   <div>
-    <mat-form-field appearance="outline">
+    <mat-form-field style="width:400px" appearance="outline">
       <mat-label>Search</mat-label>
-      <input placeholder="Search" matInput [(ngModel)]="searchField" (keyup)="search($event)">
+      <input placeholder="Search By Id, Title, Isbn, Author Id, Publish Date" matInput [(ngModel)]="searchField" (keyup)="search($event)">
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
    
