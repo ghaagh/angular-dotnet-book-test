@@ -12,5 +12,8 @@
         public int AuthorId { get; private set; }
         public virtual Author Author { get;  private set; }
         public virtual Book Book { get; private set; }
+        public override string ToString()
+        {
+            return $"{{\"BookID\":\"{BookId}\",\"AuthorId\":\"{AuthorId}\"}}";       }
     }
 }

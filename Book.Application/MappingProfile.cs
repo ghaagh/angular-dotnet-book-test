@@ -13,6 +13,7 @@ namespace Book.Application
                 .ForMember(c => c.ISBN, action => action.MapFrom(d => d.ISBN))
                 .ForMember(c=>c.AuthorBooks,action=>action.MapFrom(d=> d.AuthorIds.Select(e=>new AuthorBook(0,e))));
 
+            CreateMap<History, HistoryResponse>();
             CreateMap<Domain.Book, BookResponse>()
                 .ForMember(c => c.Title, action => action.MapFrom(d => d.BookTitle))
                 .ForMember(c => c.Isbn, action => action.MapFrom(d => d.ISBN))

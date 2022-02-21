@@ -1,4 +1,6 @@
-﻿namespace Book.Application.Domain.Repository
+﻿using Book.Application.Infrastructure;
+
+namespace Book.Application.Domain.Repository
 {
     public interface ISaver
     {

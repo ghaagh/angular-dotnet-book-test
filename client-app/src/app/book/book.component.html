@@ -60,6 +60,7 @@
     <mat-cell *matCellDef="let item" class="cell-align-right">
       <div style="display:flex">
         <button mat-icon-button color="primary" (click)="openEditDialog(item.id)"><mat-icon>edit</mat-icon></button>
+        <button mat-icon-button color="primary" routerLink="/book-history/{{item.id}}"><mat-icon>history</mat-icon></button>
         <button mat-icon-button color="warn" (click)="delete(item.id)"><mat-icon>delete</mat-icon></button>
 
       </div>

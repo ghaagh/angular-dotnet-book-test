@@ -74,6 +74,7 @@ export class BookComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
     });
   }
+
   public openEditDialog(id: number): void {
     this.bookService.getById(id).subscribe((response) => {
       const dialogRef = this.dialog.open(CreateBookDialog, {

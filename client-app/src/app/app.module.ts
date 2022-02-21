@@ -20,6 +20,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AuthorComponent, CreateAuthorDialog } from './author/author.component';
 import { AppRoutingModule } from './app-routing.module';
+import { BookHistoryComponent } from './book-history/book-history.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { AppRoutingModule } from './app-routing.module';
     PagerComponent,
     CreateBookDialog,
     CreateAuthorDialog,
-    AuthorComponent
+    AuthorComponent,
+    BookHistoryComponent
   ],
   imports: [
     BrowserModule,

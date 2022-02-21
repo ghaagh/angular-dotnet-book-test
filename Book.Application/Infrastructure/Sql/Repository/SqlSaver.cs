@@ -1,18 +1,29 @@
-﻿using Book.Application.Domain.Repository;
+﻿using Book.Application.Domain;
+using Book.Application.Domain.ChangeHistory;
+using Book.Application.Domain.Repository;
 
-namespace Book.Application.Infrastructure.Sql.Repository
+namespace Book.Application.Infrastructure.Sql.Repository;
+public class SqlSaver : ISaver
 {
-    public class SqlSaver : ISaver
+    private readonly Context _context;
+    private readonly IContextChangeHandler _contextChangeHandler;
+    /// <summary>
+    /// Context Change Handler and History Handler should be injected at least once in code!
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="contextChangeHandler"></param>
+    /// <param name="historyHandler"></param>
+    public SqlSaver(Context context, IContextChangeHandler contextChangeHandler, IHistoryHandler historyHandler)
     {
-        private readonly Context _context;
+        _context = context;
+        _contextChangeHandler = contextChangeHandler;
+    }
 
-        public SqlSaver(Context context)
-        {
-            _context = context;
-        }
-        public async Task<int> SaveAsync()
-        {
-            return await _context.SaveChangesAsync();
-        }
+    public async Task<int> SaveAsync()
+    {
+        var result = await _context.SaveChangesAsync();
+        return result;
     }
 }
+
+

@@ -1,0 +1,73 @@
+<div class="top">
+  <div>
+    <button routerLink="/books" mat-stroked-button color="primary">
+      <mat-icon>arrow_back_ios</mat-icon>
+      <span>Back</span>
+    </button>
+  </div>
+  <div>
+    <mat-form-field appearance="outline">
+      <mat-label>Search</mat-label>
+      <input placeholder="Search" matInput [(ngModel)]="searchField" (keyup)="search($event)">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+  </div>
+
+</div>
+<mat-table class="general-table"
+           #table [dataSource]="dataSource"
+           matSort
+           (matSortChange)="customSort($event)"
+           [@animateStagger]="{value:'50'}"
+           fusePerfectScrollbar>
+
+  <ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Id</mat-header-cell>
+    <mat-cell *matCellDef="let item">
+      <p>{{item.id}}</p>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="field">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Field</mat-header-cell>
+    <mat-cell *matCellDef="let item">
+      <p>{{item.field}}</p>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="logDate">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Log Date</mat-header-cell>
+    <mat-cell *matCellDef="let item">
+      <p>{{item.logDate}}</p>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="oldValue">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Old Value</mat-header-cell>
+    <mat-cell *matCellDef="let item">
+      <p>{{item.oldValue}}</p>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="currentValue">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Current Value</mat-header-cell>
+    <mat-cell *matCellDef="let item">
+      <p>{{item.currentValue}}</p>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="description">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Description</mat-header-cell>
+    <mat-cell *matCellDef="let item">
+      <p style="font-size:9px">{{item.description}}</p>
+    </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></mat-header-row>
+
+  <mat-row *matRowDef="let bankers; columns: displayedColumns;"
+           class="general">
+  </mat-row>
+
+</mat-table>
+<pager [totalCount]="totalCount" [selected]="filterDetails.currentPage" (onPageChanged)="onPageChanged($event)" [pageSize]="filterDetails.pageSize"></pager>

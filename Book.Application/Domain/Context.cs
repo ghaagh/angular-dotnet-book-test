@@ -1,13 +1,15 @@
-﻿using Book.Application.Infrastructure.Sql.Repository;
+﻿
+using Book.Application.Domain;
+using Book.Application.Domain.Repository;
 using Microsoft.EntityFrameworkCore;
-namespace Book.Application.Infrastructure.Sql
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+
+namespace Book.Application.Domain
 {
     public class Context: DbContext
     {
-
         public Context() : base() { }
         public Context(DbContextOptions<Context> options) : base(options) {
-            base.ChangeTracker.StateChanged += new EntityStateChangeHandler().StateChanged;
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -19,7 +21,7 @@ namespace Book.Application.Infrastructure.Sql
                 .WithOne(c => c.Book)
                 .HasForeignKey(c => c.BookId);
 
-            modelBuilder.Entity<Domain.Author>()
+            modelBuilder.Entity<Author>()
                 .HasMany(c => c.AuthorBooks)
                 .WithOne(c => c.Author)
                 .HasForeignKey(v => v.AuthorId);
@@ -47,12 +49,11 @@ namespace Book.Application.Infrastructure.Sql
                 .HasKey(c => new { c.BookId, c.AuthorId });
 
         }
-        public async override Task<int> SaveChangesAsync(CancellationToken token= default)
-        {
 
-            return await base.SaveChangesAsync(token);
-        }
         public virtual DbSet<Domain.Book> Books { get; set; }
-        public virtual DbSet<Domain.Author> Authors { get; set; }
+        public virtual DbSet<Author> Authors { get; set; }
+        public virtual DbSet<BookHistory> BookHistories { get; set; }
+
+
     }
 }
