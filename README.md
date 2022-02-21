@@ -26,3 +26,8 @@ It could be more generic so it would support logging changes for any table, but 
 3. Run `ng serve` while the backend is running.
 
 
+What you should see if everything is ok is :
+![Snapshot](https://github.com/ghaagh/angular-dotnet-book-test/blob/master/client-app/SnapShot.JPG)
+
+
+
