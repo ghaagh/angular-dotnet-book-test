@@ -58,15 +58,23 @@ namespace Book.Application.Domain.Helper
                 var propertyName = propertyExistResult.PropertyName;
                 if (propertyExistResult.Type != typeof(string))
                 {
+                    if (propertyExistResult.Type == typeof(DateTime))
+                        propertyName = $"{propertyName}.Date";
+                    else
                     propertyName = $"{propertyName}.ToString()";
                 }
-
-                orderQueryBuilder.Append($"{propertyName} != null && {propertyName}.ToLower().Contains(\"{searchValue.ToLower()}\") {orOperator}");
+                if (propertyExistResult.Type == typeof(DateTime))
+                {
+                    var isDateTime = DateTime.TryParse(searchValue, out DateTime date);
+                    if(isDateTime)
+                        orderQueryBuilder.Append($"{propertyName} != null && {propertyName} == \"{date.Date}\" {orOperator}");
+                }
+                else
+                    orderQueryBuilder.Append($"{propertyName} != null && {propertyName}.ToLower().Contains(\"{searchValue.ToLower()}\") {orOperator}");
                 count--;
             }
 
             var orderQuery = orderQueryBuilder.ToString().TrimEnd(',', ' ', '|');
-
             return string.IsNullOrEmpty(orderQuery) ? entities : entities.Where(orderQuery);
         }
 

@@ -39,7 +39,7 @@
   <ng-container matColumnDef="logDate">
     <mat-header-cell *matHeaderCellDef mat-sort-header>Log Date</mat-header-cell>
     <mat-cell *matCellDef="let item">
-      <p>{{item.logDate}}</p>
+      <p>{{item.logDate | date:'mediumDate'}}</p>
     </mat-cell>
   </ng-container>
 

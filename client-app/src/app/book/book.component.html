@@ -35,6 +35,12 @@
       <p>{{item.title}}</p>
     </mat-cell>
   </ng-container>
+  <ng-container matColumnDef="publishedAt">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Publish Date</mat-header-cell>
+    <mat-cell *matCellDef="let item">
+      <p>{{item.publishedAt | date:'mediumDate'}}</p>
+    </mat-cell>
+  </ng-container>
 
   <ng-container matColumnDef="isbn">
     <mat-header-cell *matHeaderCellDef mat-sort-header>ISBN</mat-header-cell>

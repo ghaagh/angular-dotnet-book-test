@@ -18,6 +18,7 @@ export class BookComponent implements OnInit {
   public displayedColumns = [
     'id',
     'bookTitle',
+    'publishedAt',
     'isbn',
     'authors',
     'actions'
@@ -26,7 +27,7 @@ export class BookComponent implements OnInit {
     currentPage: 1,
     orderby: null,
     pageSize: 10,
-    searchFields: 'isbn,bookTitle,id',
+    searchFields: 'isbn,bookTitle,id,publishedAt',
     searchValue: ''
   }
   public totalCount: number;

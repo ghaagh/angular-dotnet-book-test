@@ -25,7 +25,7 @@ export class BookHistoryComponent implements OnInit {
     currentPage: 1,
     orderby: null,
     pageSize: 10,
-    searchFields: 'field,oldValue,currentValue',
+    searchFields: 'field,oldValue,currentValue,logDate',
     searchValue: ''
   }
   public bookId: number;
