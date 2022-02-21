@@ -33,7 +33,7 @@ namespace Book.Application.Infrastructure.Sql.Repository
 
         public async Task<Paged<Domain.Book>> GetAsync(Filter filter)
         {
-            var query = _db.Books.Include(c=>c.AuthorBooks).ThenInclude(c=>c.Author).Where(c=>!c.IsDeleted).AsQueryable();
+            var query = _db.Books.Include(c => c.AuthorBooks).ThenInclude(c => c.Author).Where(c => !c.IsDeleted).AsQueryable();
 
             query = _queryHelper.ApplySearch(query, filter.SearchValue, filter.SearchFields);
 
@@ -44,13 +44,13 @@ namespace Book.Application.Infrastructure.Sql.Repository
 
         public async Task<Domain.Book> GetByIdAsync(int id)
         {
-            return await _db.Books.Include(c=>c.AuthorBooks).ThenInclude(c=>c.Author).FirstOrDefaultAsync(c => c.Id == id)
+            return await _db.Books.Include(c => c.AuthorBooks).ThenInclude(c => c.Author).FirstOrDefaultAsync(c => c.Id == id)
                 ?? throw new BookNotFoundException();
         }
 
         public async Task<Domain.Book> UpdateAsync(int id, Domain.Book book)
         {
-            var currentBook = await _db.Books.Include(d=>d.AuthorBooks).FirstOrDefaultAsync(c => c.Id == id)
+            var currentBook = await _db.Books.Include(d => d.AuthorBooks).FirstOrDefaultAsync(c => c.Id == id)
                 ?? throw new BookNotFoundException();
 
             currentBook.BookTitle = book.BookTitle;

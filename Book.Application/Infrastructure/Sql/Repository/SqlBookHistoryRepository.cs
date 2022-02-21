@@ -15,7 +15,7 @@ namespace Book.Application.Infrastructure.Sql.Repository
         }
         public async Task<Paged<BookHistory>> GetAsync(int id, Filter filter)
         {
-            var query = _db.BookHistories.Where(c=>c.BookId==id).AsQueryable();
+            var query = _db.BookHistories.Where(c => c.BookId == id).AsQueryable();
 
             query = _queryHelper.ApplySearch(query, filter.SearchValue, filter.SearchFields);
 

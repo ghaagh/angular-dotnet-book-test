@@ -12,5 +12,5 @@ namespace Book.Application.Controllers.Dto
         public string ISBN { get; set; }
         [Required]
         public DateTime PublishedAt { get; set; }
-    } 
+    }
 }

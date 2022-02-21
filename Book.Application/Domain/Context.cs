@@ -1,15 +1,12 @@
-﻿
-using Book.Application.Domain;
-using Book.Application.Domain.Repository;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Book.Application.Domain
 {
-    public class Context: DbContext
+    public class Context : DbContext
     {
         public Context() : base() { }
-        public Context(DbContextOptions<Context> options) : base(options) {
+        public Context(DbContextOptions<Context> options) : base(options)
+        {
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

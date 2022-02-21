@@ -1,7 +1,7 @@
-﻿using System.Reflection;
-using System.Text;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
-using Microsoft.EntityFrameworkCore;
+using System.Reflection;
+using System.Text;
 
 namespace Book.Application.Domain.Helper
 {

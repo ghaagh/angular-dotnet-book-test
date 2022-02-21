@@ -1,6 +1,5 @@
 using AutoMapper;
 using Book.Application;
-using Book.Application.Domain;
 using Book.Application.Infrastructure.Sql;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,7 +29,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors(options => {
+app.UseCors(options =>
+{
     options.AllowAnyHeader()
     .AllowAnyMethod()
     .AllowAnyOrigin();

@@ -23,14 +23,14 @@ namespace Book.Application.Infrastructure.Sql.Repository
 
         public async Task DeleteAsync(int id)
         {
-            var author = await _context.Authors.FirstOrDefaultAsync(c => c.Id == id)??throw new AuthorNotFoundException();
+            var author = await _context.Authors.FirstOrDefaultAsync(c => c.Id == id) ?? throw new AuthorNotFoundException();
             author.Delete();
         }
 
         public async Task<Paged<Author>> GetAsync(Filter filter)
         {
 
-            var query = _context.Authors.Where(c=>!c.IsDeleted).AsQueryable();
+            var query = _context.Authors.Where(c => !c.IsDeleted).AsQueryable();
 
             query = _queryHelper.ApplySearch(query, filter.SearchValue, filter.SearchFields);
 

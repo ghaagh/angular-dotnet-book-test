@@ -44,7 +44,7 @@ public class BookHistoryHandler : IHistoryHandler
             command.CommandText += $"INSERT INTO BookHistories Values (@BookId{index},@LogDate{index},@OldValue{index},@CurrentValue{index},@Field{index},@Description{index})\n";
             command.Parameters.AddWithValue($"@BookId{index}", eventArgument.Id);
             command.Parameters.AddWithValue($"@LogDate{index}", bookHistory.LogDate);
-            command.Parameters.AddWithValue($"@OldValue{index}",string.IsNullOrEmpty( bookHistory.OldValue)?DBNull.Value: bookHistory.OldValue);
+            command.Parameters.AddWithValue($"@OldValue{index}", string.IsNullOrEmpty(bookHistory.OldValue) ? DBNull.Value : bookHistory.OldValue);
             command.Parameters.AddWithValue($"@CurrentValue{index}", bookHistory.CurrentValue);
             command.Parameters.AddWithValue($"@Field{index}", bookHistory.Field);
             command.Parameters.AddWithValue($"@Description{index}", bookHistory.Description);

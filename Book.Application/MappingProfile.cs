@@ -11,7 +11,7 @@ namespace Book.Application
             CreateMap<CreateBookRequest, Domain.Book>()
                 .ForMember(c => c.BookTitle, action => action.MapFrom(d => d.Title))
                 .ForMember(c => c.ISBN, action => action.MapFrom(d => d.ISBN))
-                .ForMember(c=>c.AuthorBooks,action=>action.MapFrom(d=> d.AuthorIds.Select(e=>new AuthorBook(0,e))));
+                .ForMember(c => c.AuthorBooks, action => action.MapFrom(d => d.AuthorIds.Select(e => new AuthorBook(0, e))));
 
             CreateMap<History, HistoryResponse>();
             CreateMap<Domain.Book, BookResponse>()

@@ -21,7 +21,7 @@
         public void SetAuthors(IList<int> authorIds)
         {
             AuthorBooks = new List<AuthorBook>();
-            AuthorBooks= authorIds.Select(c => new AuthorBook(Id, c)).ToList();
+            AuthorBooks = authorIds.Select(c => new AuthorBook(Id, c)).ToList();
         }
         public void Delete() => IsDeleted = true;
     }

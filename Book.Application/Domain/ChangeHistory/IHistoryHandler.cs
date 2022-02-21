@@ -1,6 +1,4 @@
-﻿using Book.Application.Infrastructure;
-
-namespace Book.Application.Domain.ChangeHistory;
+﻿namespace Book.Application.Domain.ChangeHistory;
 
 public interface IHistoryHandler
 {

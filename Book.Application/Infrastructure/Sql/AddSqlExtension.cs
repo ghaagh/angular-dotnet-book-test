@@ -12,13 +12,14 @@ namespace Book.Application.Infrastructure.Sql
         public static IServiceCollection AddSqlDependencies(this IServiceCollection services, string connectionString)
         {
 
-            
+
             services.AddDbContext<Context>(options =>
             {
                 options.UseSqlServer(connectionString);
             });
 
-            services.AddScoped<IContextChangeHandler>(options => {
+            services.AddScoped<IContextChangeHandler>(options =>
+            {
                 var context = options.GetRequiredService<Context>();
                 var sqlContextChangeHandler = new SqlContextChangeHandler(context);
                 context.ChangeTracker.StateChanged += sqlContextChangeHandler.OnSaveFinished;
@@ -26,7 +27,8 @@ namespace Book.Application.Infrastructure.Sql
                 return sqlContextChangeHandler;
             });
 
-            services.AddScoped<IHistoryHandler>(options => {
+            services.AddScoped<IHistoryHandler>(options =>
+            {
                 IContextChangeHandler contextChangeHandler = options.GetRequiredService<IContextChangeHandler>();
                 var historyHandler = new BookHistoryHandler(connectionString);
                 contextChangeHandler.HistoryChanged += historyHandler.OnChangeExtracted;
@@ -37,8 +39,8 @@ namespace Book.Application.Infrastructure.Sql
             services.AddScoped<IQueryHelper<Author>, QueryHelper<Author>>();
             services.AddScoped<IQueryHelper<BookHistory>, QueryHelper<BookHistory>>();
             services.AddScoped<IBookRepository, Repository.SqlBookRepository>();
-            
-            
+
+
             services.AddScoped<ISaver, Repository.SqlSaver>();
             services.AddScoped<IBookHistoryRepository, Repository.SqlBookHistoryRepository>();
             services.AddScoped<IAuthorRepository, Repository.SqlAuthorRepository>();

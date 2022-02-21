@@ -1,6 +1,6 @@
 ﻿namespace Book.Application.Domain
 {
-    public class OnChangedEventArgument: EventArgs
+    public class OnChangedEventArgument : EventArgs
     {
         public List<Change> Changes { get; set; } = new List<Change>();
     }

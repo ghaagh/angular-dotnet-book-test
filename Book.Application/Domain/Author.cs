@@ -1,6 +1,6 @@
 ﻿namespace Book.Application.Domain
 {
-    public class Author: IAggregateRoot
+    public class Author : IAggregateRoot
     {
         public Author(string name)
         {
@@ -11,6 +11,6 @@
         public virtual ICollection<AuthorBook>? AuthorBooks { get; set; }
         public bool IsDeleted { get; private set; }
         public void Delete() => IsDeleted = true;
-        public void SetName(string name) => Name = name; 
+        public void SetName(string name) => Name = name;
     }
 }

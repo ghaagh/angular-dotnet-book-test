@@ -17,7 +17,7 @@ public class SqlContextChangeHandler : IContextChangeHandler
     {
         _changes = new List<Change>();
         _context = context;
-        
+
     }
 
     /// <summary>

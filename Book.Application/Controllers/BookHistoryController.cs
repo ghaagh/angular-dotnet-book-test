@@ -1,8 +1,8 @@
-﻿using Book.Application.Domain.Repository;
-using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
+﻿using AutoMapper;
 using Book.Application.Controllers.Dto;
 using Book.Application.Domain;
+using Book.Application.Domain.Repository;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Book.Application.Controllers
 {
@@ -20,11 +20,11 @@ namespace Book.Application.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GET(int id,[FromQuery]SearchRequest request)
+        public async Task<IActionResult> GET(int id, [FromQuery] SearchRequest request)
         {
             var filter = _mapper.Map<Filter>(request);
 
-            var bookPagedData = await _historyRepo.GetAsync(id,filter);
+            var bookPagedData = await _historyRepo.GetAsync(id, filter);
 
             return Ok(new Paged<HistoryResponse>(
                 bookPagedData.Records.Select(c => _mapper.Map<HistoryResponse>(c)),
