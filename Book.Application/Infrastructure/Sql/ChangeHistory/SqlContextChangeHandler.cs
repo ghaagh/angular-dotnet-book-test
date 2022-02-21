@@ -67,61 +67,46 @@ public class SqlContextChangeHandler : IContextChangeHandler
         {
 
             var entity = item.Entity as Domain.Book;
-            //It is not a modification.
+            //It is not a modification so return;
             if (entity.Id <= 0)
                 continue;
             foreach (var member in item.Members.Where(c => c.IsModified))
             {
 
-                if (member is PropertyEntry propertyMember)
+                switch (member)
                 {
-                    var currentValue = member.CurrentValue?.ToString();
-                    var originalValue = propertyMember.OriginalValue?.ToString();
+                    case PropertyEntry propertyEntry:
+                        _changes.Add(ExtractChange(entity.Id, propertyEntry));
+                        break;
+                    case CollectionEntry collectionEntry:
+                        var deletedObjects = _context.ChangeTracker.Entries()
+                                                .Where(c => c.State == EntityState.Deleted && c.Entity.GetType() == typeof(AuthorBook) && (c.Entity as AuthorBook).BookId == entity.Id)
+                                                .Select(c => c.Entity as AuthorBook).ToList();
+                        var change = ExtractChange(entity.Id, collectionEntry, deletedObjects);
+                        savedAthorOnBooks = true;
+                        if (change == null)
+                            continue;
+                        _changes.Add(change);
 
-                    _changes.Add(new Change
-                    {
-                        Id = entity.Id,
-                        Field = member.Metadata.Name,
-                        NewValue = currentValue,
-                        OldValue = originalValue
-                    });
-                }
-                else if (member is CollectionEntry collectionEntry)
-                {
-
-                    var deletedAuthors = _context.ChangeTracker.Entries()
-                    .Where(c => c.State == EntityState.Deleted &&
-                    c.Entity.GetType() == typeof(AuthorBook) &&
-                    (c.Entity as AuthorBook).BookId == entity.Id)
-                        .Select(c => c.Entity as AuthorBook).ToList();
-
-
-                    _changes.Add(new Change
-                    {
-                        Id = entity.Id,
-                        Field = member.Metadata.Name,
-                        NewValue = member.CurrentValue,
-                        OldValue = deletedAuthors
-                    });
-                    savedAthorOnBooks = true;
+                        break;
                 }
             }
         }
-
+        //it is already capturedNo Need to look at authors book context. 
         if (savedAthorOnBooks)
         {
             return;
         }
 
-        var authorChanges = _context.ChangeTracker.Entries().Where(e =>
-        (e.State == EntityState.Added || e.State == EntityState.Modified) &&
-        e.Entity.GetType() == typeof(Domain.AuthorBook)).Select(c => c.Entity as AuthorBook).GroupBy(c => c.BookId);
+        var authorChanges = _context.ChangeTracker.Entries()
+            .Where(e => (e.State == EntityState.Added || e.State == EntityState.Modified) &&
+        e.Entity.GetType() == typeof(AuthorBook)).Select(c => c.Entity as AuthorBook).GroupBy(c => c.BookId);
         var addedAuthors = new List<AuthorBook>();
 
         foreach (var groupedItem in authorChanges)
         {
             var bookId = groupedItem.Key;
-            //it is not a modification
+            //it is not a modification. so return.
             if (bookId <= 0)
                 continue;
             foreach (var item in groupedItem)
@@ -136,7 +121,7 @@ public class SqlContextChangeHandler : IContextChangeHandler
                 .Select(c => c.Entity as AuthorBook).ToList();
 
 
-            _changes.Add(new Change()
+            _changes.Add(new Change
             {
                 Id = bookId,
                 Field = "AuthorBooks",
@@ -145,6 +130,39 @@ public class SqlContextChangeHandler : IContextChangeHandler
             });
         }
     }
+
+    private static Change ExtractChange(int id, PropertyEntry propertyEntry)
+    {
+        var currentValue = propertyEntry.CurrentValue?.ToString();
+        var originalValue = propertyEntry.OriginalValue?.ToString();
+        return new Change
+        {
+            Id = id,
+            Field = propertyEntry.Metadata.Name,
+            NewValue = currentValue,
+            OldValue = originalValue
+        };
+
+    }
+
+    private static Change ExtractChange(int id, CollectionEntry collectionEntry, object deletedEntries)
+    {
+        var newAuthors = collectionEntry.CurrentValue as List<AuthorBook>;
+        var deletedAuthors = deletedEntries as List<AuthorBook>;
+
+        if (deletedAuthors.SequenceEqual(newAuthors))
+            return null;
+
+        return new Change
+        {
+            Id = id,
+            Field = collectionEntry.Metadata.Name,
+            NewValue = collectionEntry.CurrentValue,
+            OldValue = deletedAuthors
+        };
+
+    }
+
     private void Invoke()
     {
         HistoryChanged.Invoke(this, new OnChangedEventArgument() { Changes = _changes });

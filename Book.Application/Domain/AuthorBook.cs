@@ -16,5 +16,16 @@
         {
             return $"{{\"BookID\":\"{BookId}\",\"AuthorId\":\"{AuthorId}\"}}";
         }
+        public override bool Equals(object? obj)
+        {
+            if (obj == null)
+                return false;
+            if (obj is AuthorBook authorBookObj)
+            {
+                return BookId == authorBookObj.BookId && AuthorId == authorBookObj.AuthorId;
+            }
+            else
+                return false;
+        }
     }
 }
