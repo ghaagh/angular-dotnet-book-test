@@ -6,7 +6,7 @@
         {
             LogDate = DateTime.Now;
             OldValue = oldValue?.ToString();
-            CurrentValue = currentValue.ToString();
+            CurrentValue = currentValue?.ToString();
             Field = field;
         }
         protected History() { }

@@ -56,6 +56,7 @@ namespace Book.Application.Infrastructure.Sql.Repository
             currentBook.BookTitle = book.BookTitle;
             currentBook.ISBN = book.ISBN;
             currentBook.PublishedAt = book.PublishedAt;
+            currentBook.Description = book.Description;
             currentBook.SetAuthors(book.AuthorBooks.Select(c => c.AuthorId).ToList());
             return book;
         }

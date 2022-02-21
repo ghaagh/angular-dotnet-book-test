@@ -45,12 +45,12 @@ namespace Book.Application.Controllers
         [HttpPost]
         public async Task<IActionResult> POST(CreateBookRequest request)
         {
-            var book = new Domain.Book(request.Title, request.ISBN, request.PublishedAt, request.AuthorIds);
+            var book = new Domain.Book(request.Title, request.ISBN, request.PublishedAt, request.AuthorIds, request.Description);
 
             await _bookRepo.AddAsync(book);
             await _saver.SaveAsync();
 
-            return Ok(_mapper.Map<BookResponse>(book));
+            return Ok(_mapper.Map<BookResponse>(await _bookRepo.GetByIdAsync(book.Id)));
         }
 
         [HttpPut("{id}")]

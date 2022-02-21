@@ -4,11 +4,12 @@
     {
         private Book() { }
 
-        public Book(string bookTitle, string isbn, DateTime publishedAt, IList<int> authorIds)
+        public Book(string bookTitle, string isbn, DateTime publishedAt, IList<int> authorIds,string? description= null)
         {
             BookTitle = bookTitle;
             ISBN = isbn;
             PublishedAt = publishedAt;
+            Description = description;
             SetAuthors(authorIds);
         }
 
@@ -17,6 +18,7 @@
         public string? ISBN { get; set; }
         public DateTime PublishedAt { get; set; }
         public bool IsDeleted { get; set; }
+        public string? Description { get; set; }
         public virtual ICollection<AuthorBook> AuthorBooks { get; set; }
         public void SetAuthors(IList<int> authorIds)
         {

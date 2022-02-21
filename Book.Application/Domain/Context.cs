@@ -28,21 +28,29 @@ namespace Book.Application.Domain
                 .IsRequired()
                 .HasMaxLength(200);
 
-            modelBuilder.Entity<Domain.Book>()
+            modelBuilder.Entity<Book>()
                 .Property(c => c.ISBN)
                 .IsRequired()
                 .HasMaxLength(15);
 
-            modelBuilder.Entity<Domain.Book>()
+
+            modelBuilder.Entity<Book>()
                 .Property(c => c.PublishedAt)
                 .IsRequired();
 
-            modelBuilder.Entity<Domain.Author>()
+            modelBuilder.Entity<Book>().Property(c => c.Description).HasMaxLength(400);
+
+            modelBuilder.Entity<BookHistory>().Property(c => c.Description).HasMaxLength(1000);
+            modelBuilder.Entity<BookHistory>().Property(c => c.Field).HasMaxLength(20);
+            modelBuilder.Entity<BookHistory>().Property(c => c.CurrentValue).HasMaxLength(100);
+            modelBuilder.Entity<BookHistory>().Property(c => c.OldValue).HasMaxLength(100);
+
+            modelBuilder.Entity<Author>()
                 .Property(c => c.Name)
                 .IsRequired()
                 .HasMaxLength(200);
 
-            modelBuilder.Entity<Domain.AuthorBook>()
+            modelBuilder.Entity<AuthorBook>()
                 .HasKey(c => new { c.BookId, c.AuthorId });
 
         }
