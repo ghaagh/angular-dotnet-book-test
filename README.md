@@ -1,6 +1,6 @@
 # Angular auto history logger including the front-end project
 ## Notes
-- The Domain Project and Infrastructure project are implemented inside 2 Folders in application. They are completely separated from eachother.
+- The Domain Project and Infrastructure project are implemented inside 2 Folders in the application. They are completely separated from each other.
 - The SQL database dependency injection codes can be  found on 
 [AddSqlExtension.cs](https://github.com/ghaagh/angular-dotnet-book-test/blob/master/Book.Application/Infrastructure/Sql/AddSqlExtension.cs). 
 you can change the `Book and Author` database to anything Entity framework supports.
