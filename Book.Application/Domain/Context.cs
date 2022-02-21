@@ -43,6 +43,7 @@ namespace Book.Application.Domain
             modelBuilder.Entity<BookHistory>().Property(c => c.Description).HasMaxLength(1000);
             modelBuilder.Entity<BookHistory>().Property(c => c.Field).HasMaxLength(20);
             modelBuilder.Entity<BookHistory>().Property(c => c.CurrentValue).HasMaxLength(100);
+            modelBuilder.Entity<BookHistory>().Property(c => c.CurrentValue).IsRequired(false);
             modelBuilder.Entity<BookHistory>().Property(c => c.OldValue).HasMaxLength(100);
 
             modelBuilder.Entity<Author>()

@@ -10,6 +10,7 @@ export interface BookResponse {
   title: string;
   isbn: string;
   publishedAt: string;
+  description: string;
   authors: AuthorResponse[];
 }
 

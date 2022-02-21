@@ -3,4 +3,5 @@ export interface CreateBookRequest {
   authorIds: number[];
   iSBN: string;
   publishedAt: string;
+  description: string;
 }

@@ -32,6 +32,13 @@
         <span *ngIf="createBookForm.get('publishedAt').hasError('required')">Publish date is mandatory</span>
       </mat-error>
     </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description"></textarea>
+      <mat-error>
+        <span *ngIf="createBookForm.get('description').hasError('maxlength')">Max Length is reached</span>
+      </mat-error>
+    </mat-form-field>
 
     <mat-form-field class="example-full-width" appearance="outline">
       <mat-label>Authors</mat-label>

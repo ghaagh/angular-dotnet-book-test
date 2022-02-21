@@ -21,6 +21,7 @@ export class BookComponent implements OnInit {
     'publishedAt',
     'isbn',
     'authors',
+    'description',
     'actions'
   ];
   public filterDetails: BookSearchInput = <BookSearchInput>{
@@ -125,13 +126,15 @@ export class CreateBookDialog implements OnInit {
     this.createBookForm = this._formBuilder.group({
       isbn: new FormControl('', [Validators.maxLength(15), Validators.required]),
       title: new FormControl('', [Validators.maxLength(50), Validators.required]),
-      publishedAt: new FormControl('', [Validators.required])
+      publishedAt: new FormControl('', [Validators.required]),
+      description: new FormControl('', [Validators.maxLength(400)])
     });
     if (this.editMode) {
       this.createBookForm.patchValue({
         isbn: this.data.isbn,
         title: this.data.title,
-        publishedAt: this.data.publishedAt
+        publishedAt: this.data.publishedAt,
+        description: this.data.description
       });
       this.authorsList = this.data.authors;
       this.authorsDataSource.data = this.authorsList;
@@ -159,6 +162,7 @@ export class CreateBookDialog implements OnInit {
   public onSubmit = () => {
     let model = <CreateBookRequest>{
       authorIds: this.authorsList.map(item => item.id),
+      description: this.createBookForm.controls['description'].value,
       iSBN: this.createBookForm.controls['isbn'].value,
       publishedAt: this.createBookForm.controls['publishedAt'].value,
       title: this.createBookForm.controls['title'].value
