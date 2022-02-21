@@ -2,7 +2,7 @@
 using Book.Application.Domain.ChangeHistory;
 using Book.Application.Domain.Helper;
 using Book.Application.Domain.Repository;
-using Book.Application.Infrastructure.Sql.ChangeHistory;
+using Book.Application.Infrastructure.Ado.ChangeHistory;
 using Microsoft.EntityFrameworkCore;
 
 namespace Book.Application.Infrastructure.Sql
@@ -18,23 +18,7 @@ namespace Book.Application.Infrastructure.Sql
                 options.UseSqlServer(connectionString);
             });
 
-            services.AddScoped<IContextChangeHandler>(options =>
-            {
-                var context = options.GetRequiredService<Context>();
-                var sqlContextChangeHandler = new SqlContextChangeHandler(context);
-                context.ChangeTracker.StateChanged += sqlContextChangeHandler.OnSaveFinished;
-                context.SavingChanges += sqlContextChangeHandler.OnSaving;
-                return sqlContextChangeHandler;
-            });
-
-            services.AddScoped<IHistoryHandler>(options =>
-            {
-                IContextChangeHandler contextChangeHandler = options.GetRequiredService<IContextChangeHandler>();
-                var historyHandler = new BookHistoryHandler(connectionString);
-                contextChangeHandler.HistoryChanged += historyHandler.OnChangeExtracted;
-                return historyHandler;
-
-            });
+            
             services.AddScoped<IQueryHelper<Domain.Book>, QueryHelper<Domain.Book>>();
             services.AddScoped<IQueryHelper<Author>, QueryHelper<Author>>();
             services.AddScoped<IQueryHelper<BookHistory>, QueryHelper<BookHistory>>();

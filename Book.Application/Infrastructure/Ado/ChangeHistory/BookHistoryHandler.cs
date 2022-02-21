@@ -2,7 +2,7 @@
 using Book.Application.Domain.ChangeHistory;
 using Microsoft.Data.SqlClient;
 
-namespace Book.Application.Infrastructure.Sql.ChangeHistory;
+namespace Book.Application.Infrastructure.Ado.ChangeHistory;
 public class BookHistoryHandler : IHistoryHandler
 {
     private readonly string _connectionString;

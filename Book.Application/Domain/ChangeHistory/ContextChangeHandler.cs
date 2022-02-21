@@ -1,19 +1,18 @@
-﻿using Book.Application.Domain;
-using Book.Application.Domain.ChangeHistory;
+﻿
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Book.Application.Infrastructure.Sql.ChangeHistory;
+namespace Book.Application.Domain.ChangeHistory;
 
 /// <summary>
 /// This class streams/gets the changes of data for insertion or modification on books.
 /// </summary>
-public class SqlContextChangeHandler : IContextChangeHandler
+public class ContextChangeHandler : IContextChangeHandler
 {
     public event EventHandler<OnChangedEventArgument> HistoryChanged;
     private readonly Context _context;
     private readonly List<Change> _changes;
-    public SqlContextChangeHandler(Context context)
+    public ContextChangeHandler(Context context)
     {
         _changes = new List<Change>();
         _context = context;
